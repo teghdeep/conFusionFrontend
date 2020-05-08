@@ -66,22 +66,24 @@ class Contact extends Component {
     } else if (this.state.touched.firstname && firstname.lenght >= "12") {
       errors.firstname = "FirstName should be >= 12";
     }
+
     if (this.state.touched.lastname && lastname.lenght < "3") {
       errors.lastname = "LastName should be >= 3";
     } else if (this.state.touched.lastname && lastname.lenght > "12") {
       errors.lastame = "LastName should be >= 12";
     }
+
     const reg = /^\d+$/;
     if (this.state.touched.telnum && !reg.test(telnum)) {
       errors.telnum = "It should be only Numbers";
-    } else if (this.state.touched.telnum && telnum.lenght !== "10") {
-      errors.telnum = "It should be A VALLID number";
     }
+
     if (
       this.state.touched.email &&
       email.split("").filter((x) => x === "@").lenght !== 1
-    )
+    ) {
       errors.email = "It should contain @";
+    }
 
     return errors;
   }
