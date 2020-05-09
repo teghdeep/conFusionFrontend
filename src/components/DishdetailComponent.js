@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   Card,
   CardImg,
@@ -8,28 +8,146 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Media,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
+  Button,
+  Row,
+  Col,
 } from "reactstrap";
+import { Control, LocalForm, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
 
-const Dishdetail = (props) => {
-  if (props.dish != null) {
-    const comment = props.comments.map((comment) => {
+class Dishdetail extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isModalOpen: false,
+    };
+
+    this.toggleModal = this.toggleModal.bind(this);
+  }
+
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
+  }
+
+  handleCommentForm(values) {
+    this.toggleModal();
+    console.log("Current State is: " + JSON.stringify(values));
+    alert("Current State is: " + JSON.stringify(values));
+  }
+
+  render() {
+    const required = (val) => val && val.length;
+    const maxLength = (len) => (val) => !val || val.length <= len;
+    const minLength = (len) => (val) => val && val.length >= len;
+    const comment = this.props.comments.map((comment) => {
       return (
-        <Media>
-          <Media body>
-            {comment.comment}
-            <br />
-            <br />
-            --{comment.author},
-            {new Intl.DateTimeFormat("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-            }).format(new Date(Date.parse(comment.date)))}
-            <br />
-            <br />
+        <>
+          <Media>
+            <Media body>
+              {comment.comment}
+              <br />
+              <br />
+              --{comment.author},
+              {new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+              }).format(new Date(Date.parse(comment.date)))}
+              <br />
+            </Media>
           </Media>
-        </Media>
+
+          <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+            <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+            <ModalBody>
+              <LocalForm onSubmit={(values) => this.handleCommentForm(values)}>
+                <Row className="form-group">
+                  <div className="col-12">
+                    <Label htmlFor="rating" md={2}>
+                      Rating
+                    </Label>
+                  </div>
+                  <div className="col-12">
+                    <Control.select
+                      model=".rating"
+                      name="rating"
+                      className="form-control"
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </Control.select>
+                  </div>
+                </Row>
+
+                <Row className="form-group">
+                  <div className="col-12">
+                    <Label htmlFor="name" md={2}>
+                      Name
+                    </Label>
+                  </div>
+                  <div className="col-12">
+                    <Control.text
+                      model=".name"
+                      id="name"
+                      name="name"
+                      placeholder="Name"
+                      className="form-control"
+                      validators={{
+                        required,
+                        minLength: minLength(3),
+                        maxLength: maxLength(15),
+                      }}
+                    />
+                    <Errors
+                      className="text-danger"
+                      model=".name"
+                      show="touched"
+                      messages={{
+                        required: "Required",
+                        minLength: "Must be greater than 2 characters",
+                        maxLength: "Must be 15 characters or less",
+                      }}
+                    />
+                  </div>
+                </Row>
+
+                <Row className="form-group">
+                  <div className="col-12">
+                    <Label htmlFor="message" md={2}>
+                      Comment
+                    </Label>
+                  </div>
+                  <div className="col-12">
+                    <Control.textarea
+                      model=".comm"
+                      id="comm"
+                      name="comm"
+                      rows="12"
+                      className="form-control"
+                    />
+                  </div>
+                </Row>
+                <Row className="form-group">
+                  <Col md={{ size: 10, offset: 2 }}>
+                    <Button type="submit" color="primary">
+                      Submit
+                    </Button>
+                  </Col>
+                </Row>
+              </LocalForm>
+            </ModalBody>
+          </Modal>
+        </>
       );
     });
 
@@ -40,31 +158,40 @@ const Dishdetail = (props) => {
             <BreadcrumbItem>
               <Link to="/menu">Menu</Link>
             </BreadcrumbItem>
-            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+            <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
           </Breadcrumb>
           <div className="col-12">
-            <h3>{props.dish.name}</h3>
+            <h3>{this.props.dish.name}</h3>
             <hr />
           </div>
         </div>
         <div className="row">
           <div className="col-12 col-md-5 m-1">
             <Card>
-              <CardImg top src={props.dish.image} alt={props.dish.name} />
+              <CardImg
+                top
+                src={this.props.dish.image}
+                alt={this.props.dish.name}
+              />
               <CardBody>
-                <CardTitle>{props.dish.name}</CardTitle>
-                <CardText>{props.dish.description}</CardText>
+                <CardTitle>{this.props.dish.name}</CardTitle>
+                <CardText>{this.props.dish.description}</CardText>
               </CardBody>
             </Card>
           </div>
           <div className="col-12 col-md-5 m-1">
             <h2>Comments</h2>
             {comment}
+            <br />
+            <br />
+            <Button outline onClick={this.toggleModal}>
+              <span className="fa fa-pencil fa-lg"></span> Submit Comment
+            </Button>
           </div>
         </div>
       </div>
     );
-  } else return <div></div>;
-};
+  }
+}
 
 export default Dishdetail;
