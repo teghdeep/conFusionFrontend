@@ -37,9 +37,13 @@ class Dishdetail extends Component {
   }
 
   handleCommentForm(values) {
+    this.props.addComment(
+      this.props.dish.id,
+      values.rating,
+      values.name,
+      values.comm
+    );
     this.toggleModal();
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
   }
 
   render() {
@@ -123,7 +127,7 @@ class Dishdetail extends Component {
 
                 <Row className="form-group">
                   <div className="col-12">
-                    <Label htmlFor="message" md={2}>
+                    <Label htmlFor="comm" md={2}>
                       Comment
                     </Label>
                   </div>
