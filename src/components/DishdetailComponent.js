@@ -18,6 +18,7 @@ import {
 } from "reactstrap";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
 
 class Dishdetail extends Component {
   constructor(props) {
@@ -155,46 +156,63 @@ class Dishdetail extends Component {
       );
     });
 
-    return (
-      <div className="container">
-        <div className="row">
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Link to="/menu">Menu</Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
-          </Breadcrumb>
-          <div className="col-12">
-            <h3>{this.props.dish.name}</h3>
-            <hr />
+    if (this.props.isLoading) {
+      return (
+        <div className="container">
+          <div className="row">
+            <Loading />
           </div>
         </div>
-        <div className="row">
-          <div className="col-12 col-md-5 m-1">
-            <Card>
-              <CardImg
-                top
-                src={this.props.dish.image}
-                alt={this.props.dish.name}
-              />
-              <CardBody>
-                <CardTitle>{this.props.dish.name}</CardTitle>
-                <CardText>{this.props.dish.description}</CardText>
-              </CardBody>
-            </Card>
-          </div>
-          <div className="col-12 col-md-5 m-1">
-            <h2>Comments</h2>
-            {comment}
-            <br />
-            <br />
-            <Button outline onClick={this.toggleModal}>
-              <span className="fa fa-pencil fa-lg"></span> Submit Comment
-            </Button>
+      );
+    } else if (this.props.errMess) {
+      return (
+        <div className="container">
+          <div className="row">
+            <h4>{this.props.errMess}</h4>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else if (this.props.dish != null)
+      return (
+        <div className="container">
+          <div className="row">
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <Link to="/menu">Menu</Link>
+              </BreadcrumbItem>
+              <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
+            </Breadcrumb>
+            <div className="col-12">
+              <h3>{this.props.dish.name}</h3>
+              <hr />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 col-md-5 m-1">
+              <Card>
+                <CardImg
+                  top
+                  src={this.props.dish.image}
+                  alt={this.props.dish.name}
+                />
+                <CardBody>
+                  <CardTitle>{this.props.dish.name}</CardTitle>
+                  <CardText>{this.props.dish.description}</CardText>
+                </CardBody>
+              </Card>
+            </div>
+            <div className="col-12 col-md-5 m-1">
+              <h2>Comments</h2>
+              {comment}
+              <br />
+              <br />
+              <Button outline onClick={this.toggleModal}>
+                <span className="fa fa-pencil fa-lg"></span> Submit Comment
+              </Button>
+            </div>
+          </div>
+        </div>
+      );
   }
 }
 
