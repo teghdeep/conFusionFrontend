@@ -19,6 +19,7 @@ import {
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { Link } from "react-router-dom";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
 class Dishdetail extends Component {
   constructor(props) {
@@ -192,7 +193,7 @@ class Dishdetail extends Component {
               <Card>
                 <CardImg
                   top
-                  src={this.props.dish.image}
+                  src={baseUrl + this.props.dish.image}
                   alt={this.props.dish.name}
                 />
                 <CardBody>
