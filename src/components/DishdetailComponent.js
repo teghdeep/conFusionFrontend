@@ -39,7 +39,7 @@ class Dishdetail extends Component {
   }
 
   handleCommentForm(values) {
-    this.props.addComment(
+    this.props.postComment(
       this.props.dish.id,
       values.rating,
       values.name,
